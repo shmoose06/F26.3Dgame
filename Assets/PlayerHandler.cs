@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 public class PlayerHandler : MonoBehaviour
 {
 
@@ -20,6 +21,13 @@ public class PlayerHandler : MonoBehaviour
 
     private Quaternion weaponDefaultRotation;
     private Quaternion weaponPrimedRotation;
+    private Quaternion weaponPrimedRotationUp;
+    private Quaternion weaponPrimedRotationDown;
+
+    private Vector3 weaponDefaultPosition;
+    private Vector3 weaponAttackPosition;
+    [SerializeField] private float attackSpeed = 5f;
+    private bool isAttacking = false;
 
     private int health = 0;
 
@@ -30,8 +38,15 @@ public class PlayerHandler : MonoBehaviour
         //Weapon Rotation when primed
         weaponDefaultRotation = wpnNeedle.localRotation;
         weaponPrimedRotation = weaponDefaultRotation * Quaternion.Euler(90f, 0f, 00f); //Change axis here
-    
-}
+        weaponPrimedRotationUp = weaponDefaultRotation * Quaternion.Euler(70f, 0f, 00f);
+        weaponPrimedRotationDown = weaponDefaultRotation * Quaternion.Euler(110f, 0f, 00f);
+
+        //Weapon Attack
+        weaponDefaultPosition = wpnNeedle.localPosition;
+
+            // Pushes the weapon forward relative to its current position
+        weaponAttackPosition = weaponDefaultPosition + new Vector3(0f, 0f, 0.5f);
+    }
 
     private void FixedUpdate()
     {
@@ -102,11 +117,42 @@ public class PlayerHandler : MonoBehaviour
         //WHEN PRIMED, rotate weapon
         if (isPrimed)
         {
-            wpnNeedle.localRotation = Quaternion.Slerp(
-                wpnNeedle.localRotation,
-                weaponPrimedRotation,
-                weaponRotateSpeed * Time.deltaTime
-            );
+            //rotate vertically based on direction key
+            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) 
+            {
+                wpnNeedle.localRotation = Quaternion.Slerp(
+                    wpnNeedle.localRotation,
+                    weaponPrimedRotationDown, // Difference
+                    weaponRotateSpeed * Time.deltaTime
+                );
+
+            } else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                wpnNeedle.localRotation = Quaternion.Slerp(
+                    wpnNeedle.localRotation,
+                    weaponPrimedRotationUp,   //Difference
+                    weaponRotateSpeed * Time.deltaTime
+                );
+
+            } else
+            {
+                //Default rotation
+                wpnNeedle.localRotation = Quaternion.Slerp(
+                    wpnNeedle.localRotation,
+                    weaponPrimedRotation,
+                    weaponRotateSpeed * Time.deltaTime
+                );
+
+            }
+
+            //Attack CONTROL
+            if (Input.GetKeyDown(KeyCode.Space) && !isAttacking)
+            {
+                StartCoroutine(Attack());
+            }
+
+            
+
         }
         else
         {
@@ -118,6 +164,39 @@ public class PlayerHandler : MonoBehaviour
         }
 
     }
+    //Attack
+    private IEnumerator Attack()
+    {
+        isAttacking = true;
+
+        // Thrust forward
+        while (Vector3.Distance(wpnNeedle.localPosition, weaponAttackPosition) > 0.01f)
+        {
+            wpnNeedle.localPosition = Vector3.MoveTowards(
+                wpnNeedle.localPosition,
+                weaponAttackPosition,
+                attackSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        // Pull back
+        while (Vector3.Distance(wpnNeedle.localPosition, weaponDefaultPosition) > 0.01f)
+        {
+            wpnNeedle.localPosition = Vector3.MoveTowards(
+                wpnNeedle.localPosition,
+                weaponDefaultPosition,
+                attackSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        isAttacking = false;
+    }
+
+
 
     //Connected to Patches.cs
     public void IncreaseHealth()

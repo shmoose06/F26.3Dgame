@@ -978,10 +978,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   playerSpeed: 10
   moveSpeed: 5
+  backSpeedMult: 0.7
   turnSpeed: 120
   acceleration: 10
   wpnNeedle: {fileID: 211412399}
   weaponRotateSpeed: 10
+  attackSpeed: 5
 --- !u!1 &1258264636
 GameObject:
   m_ObjectHideFlags: 0

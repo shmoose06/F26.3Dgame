@@ -30,6 +30,8 @@ GOALs: ( [+] Done | [~] Partial) __________________________
 
 [] Pseudo Inventory System (Needs to hold Keys)
 
+[] Enemy Creation
+
 [] Enemy AI(patrol,chase,avoidable through level design)
 
   - [] Enemy #1 (duck)

@@ -30,6 +30,29 @@ GOALs: ( [+] Done | [~] Partial) __________________________
 
 [] Pseudo Inventory System (Needs to hold Keys)
 
+[] Enemy AI(patrol,chase,avoidable through level design)
+
+  - [] Enemy #1 (duck)
+  - [] Enemy #2 (other one)
+
+[] Enemy telegraphed attacks
+
+[] Interactable items
+
+[] Locked doors & smooth area transitions
+
+[] Patch placement (healing) throughout the levels in potentially secret areas
+
+[] Game over screen
+
+[] Pause menu
+
+[] Short intro
+
+[] Ending
+
+[] Lighting + atmosphere
+
 [] Title Screen
 
 [] Proper Models
